@@ -70,7 +70,15 @@ gpgcheck=1
 
 4.配置Bind
 ```
- vi /usr/local/bind/etc/named.conf
+#配置rndc 配置named.conf
+
+cd /usr/local/bind/etc/
+rndc-confgen -r /dev/urandom >rndc.conf
+head -5 rndc.conf >named.conf
+wget http://www.internic.net/domain/named.root
+
+#添加其他配置
+ cat /usr/local/bind/etc/named.conf
 # Start of rndc.conf
 key "rndc-key" {
 	algorithm hmac-md5;
