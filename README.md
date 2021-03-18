@@ -54,6 +54,7 @@
 
 
 4.配置Bind
+```
  vi /usr/local/bind/etc/named.conf
 # Start of rndc.conf
 key "rndc-key" {
@@ -108,7 +109,7 @@ view "breaklinux" {
 };
 
 保存退出
-
+```
 生成 name.ca文件
 
 	(demo) -bash-4.1# cd /usr/local/bind/etc/
