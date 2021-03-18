@@ -2,14 +2,29 @@
 
 <h1 align = "center">Bind-DLZ + Flask  + Mysql  DNS管理平台 </h1>
 
-系统环境:CentOS 6.5 X64
+系统环境:CentOS 7.2 X64
 
 软件版本: 
 
       bind-9.9.5.tar.gz  
-      mysql-5.6.16.tar.gz
+      MariaDB-devel-10.1.48-1.el7.centos.x86_64
+      MariaDB-common-10.1.48-1.el7.centos.x86_64
+      MariaDB-server-10.1.48-1.el7.centos.x86_64
+      MariaDB-shared-10.1.48-1.el7.centos.x86_64
+      MariaDB-client-10.1.48-1.el7.centos.x86_6
 描述： 
-数据库安装就不在絮叨，了解运维的同学都应该知道
+```
+MariaDB数据库安装配置yum 源
+[root@docker-host01 local]# cat /etc/yum.repos.d/mariadb.repo
+[mariadb]
+name = MariaDB
+baseurl = http://yum.mariadb.org/10.1/centos7-amd64
+gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgcheck=1
+
+#安装MariaDB
+[root@docker-host01 local]#yum install -y MariaDB-server MariaDB-client MariaDB-devel mysql-libs
+```
 
 <h2 align = "center">一．源码安装配置Bind: </h2>
 
