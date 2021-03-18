@@ -126,7 +126,7 @@ view "breaklinux" {
 
 
 6.启动  Bind 服务并设置开机启动脚本
-
+```
 root@docker-host01 local]#cat /usr/lib/systemd/system/named.service
 [Unit]
 Description=Internet domain name server
@@ -146,7 +146,7 @@ systemctl enable named.service
 
 #启动DNS服务
 systemctl start named.service
-
+```
 监控系统日志：
 
 	 tail -f /var/log/messages
