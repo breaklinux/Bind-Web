@@ -160,16 +160,6 @@ systemctl start named.service
 ![](https://github.com/1032231418/doc/blob/master/images/4.png?raw=true)
 
 
-设置 Bind  开机启动脚本
-
-	bind 本文档会附带，传到服务器  /etc/init.d/ 目录
-	(demo) -bash-4.1# chmod  755 /etc/init.d/bind 
-	(demo) -bash-4.1# #mkdir  /var/run/named/ && chown  named:named -R /var/run/named 
-	杀掉 named  服务，改用脚本启动
-
-	(demo) -bash-4.1# pkill  named
-	(demo) -bash-4.1# /etc/init.d/bind  start            #监控日志，查看启动状态
-	(demo) -bash-4.1# chkconfig  --add bind            #加入开机启动
  tail -f /var/log/messages
 
 ![](https://github.com/1032231418/doc/blob/master/images/5.png?raw=true)
@@ -178,7 +168,7 @@ systemctl start named.service
 
 上传 Bind-web-1.0.tar.gz 管理平台
 
-	(demo) -bash-4.1# git  clone  https://github.com/1032231418/Bind-Web.git  #git  克隆下来
+	(demo) -bash-4.1# git  clone  https://github.com/breaklinux/Bind-Web.git  #git  克隆下来
 	(demo) -bash-4.1# cd Bind-Web
 	(demo) -bash-4.1# python  run.py     
 
