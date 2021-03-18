@@ -29,6 +29,7 @@ gpgcheck=1
 <h2 align = "center">一．源码安装配置Bind: </h2>
 
 1.源码编译安装
+```
          useradd -s /sbin/nologin -M named #创建用户
 	 tar -zxvf  bind-9.9.5.tar.gz           #解压压缩包
 	 cd bind-9.9.5
@@ -42,7 +43,7 @@ gpgcheck=1
 	 
      make
 	 make install           #源码编译安装完成
-
+```
  
 2.环境变量配置
 
