@@ -55,52 +55,57 @@
 
 4.配置Bind
  vi /usr/local/bind/etc/named.conf
+# Start of rndc.conf
+key "rndc-key" {
+	algorithm hmac-md5;
+	secret "SG8Xqevr9JI8F7UVqddZlQ==";
+};
+controls {
+        inet 127.0.0.1 port 953
+        allow { 127.0.0.1; } keys { "rndc-key"; };
+};
 
-		options {
-				directory       "/usr/local/bind/";
-				version         "bind-9.9.9";
-				listen-on port 53 { any; };
-				allow-query-cache { any; };
-				listen-on-v6 port 53 { ::1; };
-				allow-query     { any; };
-				recursion yes;    
-				dnssec-enable yes;
-				dnssec-validation yes;
-				dnssec-lookaside auto;
 
-		};
-		 
-		 
-		key "rndc-key" {
-				algorithm hmac-md5;
-				secret "C4Fg6OGjJipHKfgUWcAh+g==";
+options {
+        tcp-clients 50000;
+        directory "/usr/local/bind/var";
+        pid-file "/usr/local/bind/var/bind.pid";
+        dump-file "/usr/local/bind/var/bind_dump.db";
+        statistics-file "/usr/local/bind/var/bind.stats";
+        notify yes;
+        recursion yes;
+        version "ooxx-bind:1.0.24";
+        allow-notify       { none; };
+        allow-recursion    { any; };
+        allow-transfer     { none; };
+        allow-query        { any; };
+};
 
-		};
-		 
-		controls {
-				inet 127.0.0.1 port 953
-						allow { 127.0.0.1; } keys { "rndc-key"; };
-		};
-		 
-		 
-		view "ours_domain" {
-				match-clients           {any; };
-				allow-query-cache           {any; };
-				allow-recursion          {any; };
-				allow-transfer          {any; };
-		 
-				dlz "Mysql zone" {
-						database        "mysql
-						{host=127.0.0.1 dbname=named ssl=false port=3306 user=root pass=123456}
-						{select zone from dns_records where zone='$zone$'}
-						{select ttl, type, mx_priority, case when lower(type)='txt' then concat('\"', data, '\"') when lower(type) = 'soa' then concat_ws(' ', data, resp_person, serial, refresh, retry, expire, minimum) else data end from dns_records where zone = '$zone$' and host = '$record$'}"; 
-				};
-				zone "."  IN {
-					type hint;
-					file "/usr/local/bind/etc/named.ca";
-				};
-		 
-		};
+logging {
+        channel bind_log {
+                file "/usr/local/bind/log/bind.log" versions 3 size 20m;
+                severity info;
+                print-time yes;
+                print-severity yes;
+                print-category yes;
+        };
+        category default {
+                bind_log;
+        };
+};
+
+view "breaklinux" {
+      match-clients           {any; };
+      allow-query-cache           {any; };
+      allow-recursion          {any; };
+      allow-transfer          {any; };
+      dlz "mysql-dlz" {
+              database "mysql
+              {host=127.0.0.1 dbname=bind ssl=false port=3306 user=bind pass=123456}
+              {select zone from dns_records where zone='$zone$'}
+             {select ttl, type, mx_priority, case when lower(type)='txt' then concat('\"', data, '\"') when lower(type) = 'soa' then concat_ws(' ', data, resp_person, serial, refresh, retry, expire, minimum) else data end from dns_records where zone = '$zone$' and host = '$record$'}";
+      };
+};
 
 保存退出
 
@@ -121,7 +126,25 @@
 
 6.启动  Bind 服务并设置开机启动脚本
 
-    (demo) -bash-4.1# /usr/local/bind/sbin/named
+root@docker-host01 local]#cat /usr/lib/systemd/system/named.service
+[Unit]
+Description=Internet domain name server
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bind/sbin/named -f -u named -4
+ExecReload=/usr/local/bind/sbin/rndc reload
+ExecStop=/usr/local/bind/sbin/rndc stop
+
+[Install]
+WantedBy=multi-user.target
+Alias=bind.service
+
+#设置开机启动
+systemctl enable named.service
+
+#启动DNS服务
+systemctl start named.service
 
 监控系统日志：
 
