@@ -29,13 +29,13 @@ gpgcheck=1
 <h2 align = "center">一．源码安装配置Bind: </h2>
 
 1.源码编译安装
-
+         useradd -s /sbin/nologin -M named #创建用户
 	 tar -zxvf  bind-9.9.5.tar.gz           #解压压缩包
 	 cd bind-9.9.5
-	 ./configure --prefix=/usr/local/bind/  \
+	 ./configure --prefix=/usr/local/bind/ \ 
+	 --with-dlz-mysql=/usr \
 	 --enable-threads=no \
 	 --enable-newstats   \
-	 --with-dlz-mysql    \
 	 --disable-openssl-version-check
 	 
      #官网说明强调编译关闭多线程，即--enable-threads=no
@@ -63,9 +63,6 @@ gpgcheck=1
 
 	 useradd  -s  /sbin/nologin  named
 	 chown  -R named:named /usr/local/bind/
-
-
-
 
 
 4.配置Bind
